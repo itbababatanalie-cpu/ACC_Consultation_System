@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # Abuyog Community College - Health Services System (ACC Health Hub)
 
 A scalable, secure, Flask-powered web application built with Role-Based Access Control (RBAC) supporting **Super Admin**, **Medical Expert**, and **Student** roles.
@@ -98,3 +99,7 @@ Access the app in your browser at: `http://127.0.0.1:5000`
        return render_template('nurse_triage.html')
    ```
 3. Update Jinja navigation conditionals in `templates/base.html` to display UI features for the new role.
+=======
+# ACC_Consultation_System
+ABUYOG COMMUNITY COLLEGE CONSULTATION SYSTEM
+>>>>>>> 9c1ab92548ca0643557cb80f6b523b257146c973
