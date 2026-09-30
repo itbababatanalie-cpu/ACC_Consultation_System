@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="p-5 mb-4 bg-white rounded-3 shadow-sm border text-center">
+    <div class="container-fluid py-3">
+        <i class="fa-solid fa-hospital-user text-purple display-1 mb-3" style="color: var(--purple-main);"></i>
+        <h1 class="display-5 fw-bold text-dark">Abuyog Community College Health Hub</h1>
+        <p class="col-md-8 fs-5 mx-auto text-secondary">
+            A centralized clinic & health information platform delivering secure medical tracking, student consultations, and campus-wide advisories with Role-Based Access Control.
+        </p>
+        <a class="btn btn-purple btn-lg px-5 shadow-sm mt-3" href="{{ url_for('login') }}">
+            <i class="fa-solid fa-right-to-bracket me-2"></i> Access Account
+        </a>
+    </div>
+</div>
+
+<div class="row g-4 mt-2">
+    <div class="col-md-8">
+        <h3 class="fw-bold mb-3"><i class="fa-solid fa-bullhorn me-2 text-warning"></i> Campus Health Announcements</h3>
+        {% if announcements %}
+            {% for ann in announcements %}
+                <div class="card card-custom mb-3">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-center mb-2">
+                            <span class="badge bg-purple text-white bg-dark">{{ ann.category }}</span>
+                            <small class="text-muted">{{ ann.created_at.strftime('%B %d, %Y') }}</small>
+                        </div>
+                        <h5 class="card-title fw-bold">{{ ann.title }}</h5>
+                        <p class="card-text text-secondary">{{ ann.content }}</p>
+                    </div>
+                </div>
+            {% endfor %}
+        {% else %}
+            <div class="alert alert-info">No active health announcements at this time.</div>
+        {% endif %}
+    </div>
+
+    <div class="col-md-4">
+        <div class="card card-custom">
+            <div class="card-header card-header-purple">
+                <i class="fa-solid fa-clock me-2"></i> Clinic Hours & Contact
+            </div>
+            <div class="card-body">
+                <p><strong><i class="fa-solid fa-calendar-day me-2 text-purple"></i> Days:</strong> Monday - Friday</p>
+                <p><strong><i class="fa-solid fa-clock me-2 text-purple"></i> Time:</strong> 8:00 AM - 5:00 PM</p>
+                <p><strong><i class="fa-solid fa-location-dot me-2 text-purple"></i> Location:</strong> Main Campus Clinic, Ground Flr.</p>
+                <hr>
+                <small class="text-muted">For medical emergencies outside operating hours, please contact local emergency responders or visit the nearest hospital.</small>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

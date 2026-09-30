@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card card-custom">
+            <div class="card-header card-header-purple py-3">
+                <h4 class="mb-0 fw-bold"><i class="fa-solid fa-paper-plane me-2"></i> Submit Health Request / Appointment</h4>
+            </div>
+            <div class="card-body p-4">
+                <form action="{{ url_for('student_submit_request') }}" method="POST">
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Request Category</label>
+                        <select name="request_type" class="form-select" required>
+                            <option value="Medical Certificate Request">Medical Certificate Request</option>
+                            <option value="General Health Consultation">General Health Consultation</option>
+                            <option value="Dental Examination">Dental Examination</option>
+                            <option value="Physical Fitness Clearance">Physical Fitness Clearance (PE / Sports)</option>
+                        </select>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Preferred Consultation Date</label>
+                        <input type="date" name="preferred_date" class="form-control" required>
+                    </div>
+
+                    <div class="mb-4">
+                        <label class="form-label fw-bold">Reason for Request / Symptoms</label>
+                        <textarea name="reason" class="form-control" rows="4" placeholder="Describe your health request or concern..." required></textarea>
+                    </div>
+
+                    <button type="submit" class="btn btn-purple w-100 py-2 fw-bold shadow-sm">
+                        Submit Health Request
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,235 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="d-flex flex-column flex-sm-row justify-content-between align-items-start align-items-sm-center gap-3 mb-4">
+    <div>
+        <h2 class="fw-bold mb-0 fs-3">Dashboard</h2>
+        <span class="text-muted small">Role Context: <strong class="text-purple">{{ current_user.role }}</strong></span>
+    </div>
+    {% if current_user.has_role('Super Admin', 'Medical Expert') %}
+        <button class="btn btn-purple shadow-sm btn-responsive" data-bs-toggle="modal" data-bs-target="#announcementModal">
+            <i class="fa-solid fa-plus me-1"></i> Post Announcement
+        </button>
+    {% endif %}
+</div>
+
+{% if current_user.role == 'Super Admin' %}
+    <div class="row g-3 mb-4">
+        <div class="col-12 col-sm-6 col-lg-3">
+            <div class="stat-card">
+                <span class="text-muted small">Total Users</span>
+                <h2 class="fw-bold mb-0 text-dark">{{ total_users }}</h2>
+            </div>
+        </div>
+        <div class="col-12 col-sm-6 col-lg-3">
+            <div class="stat-card" style="border-color: #3b82f6;">
+                <span class="text-muted small">Students</span>
+                <h2 class="fw-bold mb-0 text-primary">{{ total_students }}</h2>
+            </div>
+        </div>
+        <div class="col-12 col-sm-6 col-lg-3">
+            <div class="stat-card" style="border-color: #0d9488;">
+                <span class="text-muted small">Medical Experts</span>
+                <h2 class="fw-bold mb-0 text-success">{{ total_experts }}</h2>
+            </div>
+        </div>
+        <div class="col-12 col-sm-6 col-lg-3">
+            <div class="stat-card" style="border-color: #ef4444;">
+                <span class="text-muted small">Health Records</span>
+                <h2 class="fw-bold mb-0 text-danger">{{ total_records }}</h2>
+            </div>
+        </div>
+    </div>
+
+    <div class="card card-custom mb-4">
+        <div class="card-header card-header-purple py-3"><i class="fa-solid fa-list-check me-2"></i> Recent System Audit Logs</div>
+        <div class="card-body p-0">
+            <div class="table-responsive-custom">
+                <table class="table table-hover align-middle mb-0">
+                    <thead class="table-light">
+                        <tr>
+                            <th>Time</th>
+                            <th>User ID</th>
+                            <th>Action</th>
+                            <th>IP Address</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for log in logs %}
+                        <tr>
+                            <td class="text-nowrap">{{ log.created_at.strftime('%Y-%m-%d %H:%M:%S') }}</td>
+                            <td>{{ log.user_id or 'System' }}</td>
+                            <td>{{ log.action }}</td>
+                            <td><code>{{ log.ip_address }}</code></td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+{% elif current_user.role == 'Medical Expert' %}
+    <div class="row g-3 mb-4">
+        <div class="col-12 col-md-6">
+            <div class="stat-card" style="border-color: #f59e0b;">
+                <span class="text-muted small">Pending Health Requests</span>
+                <h2 class="fw-bold mb-0 text-warning">{{ pending_requests }}</h2>
+            </div>
+        </div>
+        <div class="col-12 col-md-6">
+            <div class="stat-card">
+                <span class="text-muted small">Total Student Health Files</span>
+                <h2 class="fw-bold mb-0 text-purple">{{ total_records }}</h2>
+            </div>
+        </div>
+    </div>
+
+    <div class="card card-custom mb-4">
+        <div class="card-header card-header-purple py-3"><i class="fa-solid fa-stethoscope me-2"></i> Recent Health Requests Triage</div>
+        <div class="card-body p-0">
+            <div class="table-responsive-custom">
+                <table class="table table-hover align-middle mb-0">
+                    <thead class="table-light">
+                        <tr>
+                            <th>Student ID</th>
+                            <th>Request Type</th>
+                            <th>Preferred Date</th>
+                            <th>Status</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for req in recent_requests %}
+                        <tr>
+                            <td>{{ req.student.student_id or req.student.full_name }}</td>
+                            <td>{{ req.request_type }}</td>
+                            <td>{{ req.preferred_date }}</td>
+                            <td>
+                                <span class="badge {% if req.status == 'Approved' %}bg-success{% elif req.status == 'Pending' %}bg-warning text-dark{% else %}bg-secondary{% endif %}">
+                                    {{ req.status }}
+                                </span>
+                            </td>
+                            <td>
+                                <a href="{{ url_for('medical_requests') }}" class="btn btn-sm btn-outline-primary btn-responsive">Manage</a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+{% else %} <!-- Student Role -->
+    <div class="row g-4 mb-4">
+        <div class="col-12 col-lg-6">
+            <div class="card card-custom h-100">
+                <div class="card-header card-header-purple py-3"><i class="fa-solid fa-calendar-check me-2"></i> My Health Requests & Appointments</div>
+                <div class="card-body p-0">
+                    {% if my_requests %}
+                        <div class="list-group list-group-flush">
+                            {% for req in my_requests %}
+                            <div class="list-group-item p-3">
+                                <div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-2">
+                                    <h6 class="mb-0 fw-bold text-dark">{{ req.request_type }}</h6>
+                                    <span class="badge {% if req.status == 'Approved' %}bg-success{% elif req.status == 'Pending' %}bg-warning text-dark{% else %}bg-secondary{% endif %}">
+                                        {{ req.status }}
+                                    </span>
+                                </div>
+                                <p class="mb-2 small text-secondary">{{ req.reason }}</p>
+                                <small class="text-purple fw-bold d-block"><i class="fa-solid fa-clock me-1"></i> Preferred Date: {{ req.preferred_date }}</small>
+                                {% if req.doctor_notes %}
+                                    <div class="mt-2 alert alert-light border mb-0 p-2 small">
+                                        <strong>Medical Expert Notes:</strong> {{ req.doctor_notes }}
+                                    </div>
+                                {% endif %}
+                            </div>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        <p class="p-4 text-muted mb-0">No health requests submitted yet.</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <div class="col-12 col-lg-6">
+            <div class="card card-custom h-100">
+                <div class="card-header card-header-purple py-3"><i class="fa-solid fa-notes-medical me-2"></i> My Clinical Diagnoses & History</div>
+                <div class="card-body p-0">
+                    {% if my_records %}
+                        <div class="list-group list-group-flush">
+                            {% for rec in my_records %}
+                            <div class="list-group-item p-3">
+                                <div class="d-flex justify-content-between align-items-center mb-1">
+                                    <h6 class="mb-0 fw-bold text-danger"><i class="fa-solid fa-stethoscope me-1"></i> {{ rec.diagnosis }}</h6>
+                                    <small class="text-muted">{{ rec.created_at.strftime('%Y-%m-%d') }}</small>
+                                </div>
+                                <p class="mb-1 small"><strong>Treatment:</strong> {{ rec.treatment }}</p>
+                                <small class="text-muted">Recorded by: {{ rec.recorded_by.full_name }}</small>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        <p class="p-4 text-muted mb-0">No clinical history recorded.</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+{% endif %}
+
+<!-- Announcements Section -->
+<h4 class="fw-bold mb-3 fs-4"><i class="fa-solid fa-bullhorn text-warning me-2"></i> Campus Health Announcements</h4>
+<div class="row g-3">
+    {% for ann in announcements %}
+    <div class="col-12 col-md-6">
+        <div class="card card-custom h-100">
+            <div class="card-body p-3 p-md-4">
+                <span class="badge bg-secondary mb-2">{{ ann.category }}</span>
+                <h5 class="fw-bold fs-5">{{ ann.title }}</h5>
+                <p class="text-muted small mb-2">{{ ann.content }}</p>
+                <small class="text-purple">Posted by: {{ ann.author.full_name }} on {{ ann.created_at.strftime('%b %d, %Y') }}</small>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+
+<!-- Announcement Modal -->
+<div class="modal fade" id="announcementModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <form action="{{ url_for('create_announcement') }}" method="POST">
+                <div class="modal-header bg-purple text-white">
+                    <h5 class="modal-title fs-5">Post New Health Advisory</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body p-3 p-md-4">
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Title</label>
+                        <input type="text" name="title" class="form-control" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Category</label>
+                        <select name="category" class="form-select">
+                            <option>General Health</option>
+                            <option>Vaccination Drive</option>
+                            <option>Campus Advisory</option>
+                            <option>Dental Consultation</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Content</label>
+                        <textarea name="content" class="form-control" rows="4" required></textarea>
+                    </div>
+                </div>
+                <div class="modal-footer flex-column flex-sm-row gap-2">
+                    <button type="button" class="btn btn-secondary w-100 w-sm-auto" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-purple w-100 w-sm-auto">Publish Advisory</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

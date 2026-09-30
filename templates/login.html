@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="row justify-content-center mt-4">
+    <div class="col-md-5">
+        <div class="card card-custom">
+            <div class="card-header card-header-purple text-center py-3">
+                <h4 class="mb-0 fw-bold"><i class="fa-solid fa-lock me-2"></i> Health Hub Login</h4>
+            </div>
+            <div class="card-body p-4">
+                <form method="POST">
+                    <div class="mb-3">
+                        <label class="form-label font-weight-bold">Email Address</label>
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="fa-solid fa-envelope"></i></span>
+                            <input type="email" name="email" class="form-control" placeholder="user@acc.edu.ph" required>
+                        </div>
+                    </div>
+                    
+                    <div class="mb-4">
+                        <label class="form-label font-weight-bold">Password</label>
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="fa-solid fa-key"></i></span>
+                            <input type="password" name="password" class="form-control" placeholder="••••••••" required>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="btn btn-purple w-100 py-2 fw-bold shadow-sm">
+                        Sign In <i class="fa-solid fa-arrow-right-to-bracket ms-1"></i>
+                    </button>
+                </form>
+
+                <div class="mt-4 p-3 bg-light rounded border text-muted">
+                    <small class="fw-bold d-block mb-1"><i class="fa-solid fa-circle-info me-1"></i> Demo Test Credentials:</small>
+                    <small class="d-block"><strong>Super Admin:</strong> admin@acc.edu.ph | Admin123!</small>
+                    <small class="d-block"><strong>Medical Expert:</strong> doctor@acc.edu.ph | Doctor123!</small>
+                    <small class="d-block"><strong>Student:</strong> student@acc.edu.ph | Student123!</small>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

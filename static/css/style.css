@@ -1,0 +1,119 @@
+/* ACC Health System - Theme: Deep Purple & Slate (Fully Responsive) */
+:root {
+    --purple-main: #5b21b6;
+    --purple-dark: #4c1d95;
+    --purple-light: #7c3aed;
+    --purple-subtle: #f3e8ff;
+    --accent-gold: #fbbf24;
+    --bg-slate: #f8fafc;
+    --text-dark: #0f172a;
+    --card-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+}
+
+body {
+    background-color: var(--bg-slate);
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    color: var(--text-dark);
+    overflow-x: hidden;
+}
+
+/* Navbar & Responsive Nav Header */
+.navbar-custom {
+    background: linear-gradient(135deg, var(--purple-dark), var(--purple-main));
+    box-shadow: 0 2px 10px rgba(0,0,0,0.15);
+}
+
+.navbar-brand {
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    font-size: 1.25rem;
+}
+
+/* Cards & Modals */
+.card-custom {
+    border: none;
+    border-radius: 12px;
+    box-shadow: var(--card-shadow);
+    background-color: #ffffff;
+    transition: transform 0.2s ease-in-out;
+}
+
+.card-header-purple {
+    background-color: var(--purple-main);
+    color: #ffffff;
+    border-top-left-radius: 12px !important;
+    border-top-right-radius: 12px !important;
+    font-weight: 600;
+}
+
+/* Touch-Friendly Responsive Buttons */
+.btn-purple {
+    background-color: var(--purple-main);
+    color: #ffffff;
+    border: none;
+}
+
+.btn-purple:hover {
+    background-color: var(--purple-dark);
+    color: #ffffff;
+}
+
+.btn-responsive {
+    white-space: nowrap;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.35rem;
+}
+
+@media (max-width: 576px) {
+    .btn-responsive {
+        width: 100% !important;
+        padding: 0.6rem 1rem !important;
+        font-size: 0.95rem !important;
+    }
+}
+
+/* Responsive Badges */
+.badge-role {
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 600;
+}
+
+.badge-admin { background-color: #ef4444; color: white; }
+.badge-expert { background-color: #0d9488; color: white; }
+.badge-student { background-color: #3b82f6; color: white; }
+
+/* Stat Cards */
+.stat-card {
+    border-left: 5px solid var(--purple-main);
+    border-radius: 8px;
+    background: white;
+    padding: 1.25rem;
+    box-shadow: var(--card-shadow);
+}
+
+/* Responsive Table Wrapper with Horizontal Touch Scroll */
+.table-responsive-custom {
+    width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+}
+
+.table-responsive-custom table {
+    min-width: 650px;
+}
+
+/* Mobile-optimized action groups */
+@media (max-width: 768px) {
+    .crud-actions-flex {
+        flex-direction: column !important;
+        width: 100%;
+        gap: 0.5rem !important;
+    }
+    .crud-actions-flex form, .crud-actions-flex button, .crud-actions-flex select {
+        width: 100% !important;
+    }
+}

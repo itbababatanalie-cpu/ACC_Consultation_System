@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+{% block content %}
+<h2 class="fw-bold mb-4 fs-3">Student Health & Consultation Requests</h2>
+
+<div class="card card-custom">
+    <div class="card-body p-0">
+        <div class="table-responsive-custom">
+            <table class="table table-hover align-middle mb-0">
+                <thead class="table-light">
+                    <tr>
+                        <th>Req #</th>
+                        <th>Student Details</th>
+                        <th>Request Type</th>
+                        <th>Reason / Notes</th>
+                        <th>Preferred Date</th>
+                        <th>Status</th>
+                        <th>Action / Triage</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for req in requests %}
+                    <tr>
+                        <td>#{{ req.id }}</td>
+                        <td>
+                            <strong>{{ req.student.full_name }}</strong><br>
+                            <small class="text-muted">{{ req.student.student_id or req.student.email }}</small>
+                        </td>
+                        <td><span class="badge bg-purple">{{ req.request_type }}</span></td>
+                        <td>{{ req.reason }}</td>
+                        <td class="text-nowrap">{{ req.preferred_date }}</td>
+                        <td>
+                            <span class="badge {% if req.status == 'Approved' %}bg-success{% elif req.status == 'Pending' %}bg-warning text-dark{% elif req.status == 'Rejected' %}bg-danger{% else %}bg-secondary{% endif %}">
+                                {{ req.status }}
+                            </span>
+                        </td>
+                        <td style="min-width: 200px;">
+                            {% if current_user.has_role('Medical Expert') %}
+                            <form action="{{ url_for('update_health_request', req_id=req.id) }}" method="POST" class="d-flex flex-column gap-2">
+                                <select name="status" class="form-select form-select-sm">
+                                    <option value="Pending" {% if req.status == 'Pending' %}selected{% endif %}>Pending</option>
+                                    <option value="Approved" {% if req.status == 'Approved' %}selected{% endif %}>Approved</option>
+                                    <option value="Completed" {% if req.status == 'Completed' %}selected{% endif %}>Completed</option>
+                                    <option value="Rejected" {% if req.status == 'Rejected' %}selected{% endif %}>Rejected</option>
+                                </select>
+                                <input type="text" name="doctor_notes" class="form-control form-control-sm" placeholder="Doctor notes..." value="{{ req.doctor_notes or '' }}">
+                                <button type="submit" class="btn btn-sm btn-purple btn-responsive">Update Status</button>
+                            </form>
+                            {% else %}
+                                <small class="text-muted">Read-Only</small>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}
